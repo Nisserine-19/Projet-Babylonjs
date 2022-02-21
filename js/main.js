@@ -76,9 +76,9 @@ const createScene = function () {
 
 
 
-    const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 5, BABYLON.Vector3.Zero(), scene);
-    camera.attachControl(canvas, true);
-    camera.setPosition(new BABYLON.Vector3(0, 220, 100));
+    const camera = new BABYLON.ArcRotateCamera("Camera", 0, 10, 0, new BABYLON.Vector3(0,0, -90), scene);
+    camera.detachControl(canvas, true);
+    camera.setPosition(new BABYLON.Vector3(0, 110, 50));
 
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 1), scene);
     const moon = BABYLON.MeshBuilder.CreateSphere("moon", { diameter: 7, segments: 32 });
@@ -125,8 +125,6 @@ const createScene = function () {
         earth.rotation.x += 0.005;
         moon.rotation.x+=-0.02;
     })
-
-
 
 
     var simplePineGenerator = function (canopies, height, trunkMaterial, leafMaterial) {
