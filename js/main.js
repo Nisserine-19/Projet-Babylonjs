@@ -3,7 +3,6 @@ var engine = null;
 var scene = null;
 var sceneToRender = null;
 
-const music = new BABYLON.Sound("music","music/music.wav", scene, null, { loop: true, autoplay: true });
 
 
 var createDefaultEngine = function () {
@@ -60,6 +59,12 @@ window.addEventListener("resize", function () {
 
 const createScene = function () {
     const scene = new BABYLON.Scene(engine);
+
+    
+    var music = new BABYLON.Sound("Music", "/music/music.mp3", scene, null, {
+        loop: true,
+        autoplay: true
+      });
 
     // Skybox
     var stars = BABYLON.MeshBuilder.CreateBox("stars", {size: 5000, sideOrientation: BABYLON.Mesh.BACKSIDE}, scene);
