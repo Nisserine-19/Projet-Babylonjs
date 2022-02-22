@@ -3,6 +3,9 @@ var engine = null;
 var scene = null;
 var sceneToRender = null;
 
+let translateVectorLeft = new BABYLON.Vector3(1, 0, 0);
+let translateVectorRight = new BABYLON.Vector3(-1, 0, 0);
+let ball;
 
 
 var createDefaultEngine = function () {
@@ -39,11 +42,15 @@ window.initFunction = async function () {
     
     engine.runRenderLoop(function () {
         if (sceneToRender && sceneToRender.activeCamera) {
+            ball.translate(translateVectorLeft, 0.1, BABYLON.Space.LOCAL);
+
             sceneToRender.render();
         }
     });
     
     scene = createScene();
+    ball = scene.getMeshByName("moon");
+
 };
 
 initFunction().then(() => {
