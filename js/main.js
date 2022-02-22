@@ -59,21 +59,14 @@ const createScene = function () {
     const scene = new BABYLON.Scene(engine);
 
     // Skybox
-    var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000, scene);
-    var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
-    skyboxMaterial.backFaceCulling = false;
-    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/space", scene);
-    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-    skyboxMaterial.disableLighting = true;
-    skybox.material = skyboxMaterial;
-
-    scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
-    scene.fogDensity = 0.001;
-    scene.fogColor = new BABYLON.Color3(0, 0, 0);
-
-
+    var stars = BABYLON.MeshBuilder.CreateBox("stars", {size: 5000, sideOrientation: BABYLON.Mesh.BACKSIDE}, scene);
+    var starMat = new BABYLON.StandardMaterial("stars", scene);
+    var urlStar = "http://jerome.bousquie.fr/BJS/images/stars1.jpg"
+    var texStar = new BABYLON.Texture(urlStar, scene);
+    texStar.uScale = 3;
+    texStar.vScale = 3;
+    starMat.diffuseTexture = texStar;
+    stars.material = starMat;
 
 
     const camera = new BABYLON.ArcRotateCamera("Camera", 0, 10, 0, new BABYLON.Vector3(0,0, -90), scene);
