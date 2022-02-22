@@ -3,6 +3,9 @@ var engine = null;
 var scene = null;
 var sceneToRender = null;
 
+const music = new BABYLON.Sound("music","music/music.wav", scene, null, { loop: true, autoplay: true });
+
+
 var createDefaultEngine = function () {
     console.log("dans createDefaultEngine")
     return new BABYLON.Engine(canvas, true, {
@@ -373,7 +376,6 @@ const createScene = function () {
     tree27.parent = earth;
     tree28.parent = earth;
     tree29.parent = earth;
-
 
     return scene;
 
