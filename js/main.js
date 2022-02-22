@@ -70,8 +70,11 @@ const createScene = function () {
     
     var music = new BABYLON.Sound("Music", "/music/music.mp3", scene, null, {
         loop: true,
-        autoplay: true
+        autoplay: true,
+        volume: 0.3
       });
+
+      
 
     // Skybox
     var stars = BABYLON.MeshBuilder.CreateBox("stars", {size: 5000, sideOrientation: BABYLON.Mesh.BACKSIDE}, scene);
@@ -100,6 +103,8 @@ const createScene = function () {
     earth.material = earthMaterials;
     moon.position.y = 80;
     earthMaterials.diffuseTexture = new BABYLON.Texture("images/snow.jpg", scene);
+
+    
 
     var spot = new BABYLON.SpotLight("spot", new BABYLON.Vector3(25, 15, -10), new BABYLON.Vector3(-1, -0.8, 1), 15, 1, scene);
     spot.diffuse = new BABYLON.Color3(0.73, 0.73, 0.73);
