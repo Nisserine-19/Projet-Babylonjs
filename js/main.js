@@ -6,6 +6,27 @@ var sceneToRender = null;
 let translateVectorLeft = new BABYLON.Vector3(1, 0, 0);
 let translateVectorRight = new BABYLON.Vector3(-1, 0, 0);
 let ball;
+let inputStates = {};
+
+inputStates.left = false;
+inputStates.right = false;
+
+
+window.addEventListener('keydown', (event) => {
+    if ((event.key === "ArrowLeft") || (event.key === "q")|| (event.key === "Q")) {
+       inputStates.left = true;
+    } else if ((event.key === "ArrowRight") || (event.key === "d")|| (event.key === "D")){
+       inputStates.right = true;
+    }
+}, false);
+
+window.addEventListener('keyup', (event) => {
+    if ((event.key === "ArrowLeft") || (event.key === "q")|| (event.key === "Q")) {
+       inputStates.left = false;
+    } else if ((event.key === "ArrowRight") || (event.key === "d")|| (event.key === "D")){
+       inputStates.right = false;
+    }
+}, false);
 
 
 var createDefaultEngine = function () {
@@ -42,8 +63,13 @@ window.initFunction = async function () {
     
     engine.runRenderLoop(function () {
         if (sceneToRender && sceneToRender.activeCamera) {
-            ball.translate(translateVectorLeft, 0.1, BABYLON.Space.LOCAL);
+            if (inputStates.left){
+            ball.translate(translateVectorLeft, 0.3, BABYLON.Space.LOCAL);
+            }
 
+            if (inputStates.right){
+            ball.translate(translateVectorRight, 0.3, BABYLON.Space.LOCAL);
+            }
             sceneToRender.render();
         }
     });
@@ -74,7 +100,6 @@ const createScene = function () {
         volume: 0.3
       });
 
-      
 
     // Skybox
     var stars = BABYLON.MeshBuilder.CreateBox("stars", {size: 5000, sideOrientation: BABYLON.Mesh.BACKSIDE}, scene);
@@ -128,6 +153,8 @@ const createScene = function () {
     torus1.rotation.z = 1.57;
     torus2.position.x = -26;
     torus2.rotation.z = 1.57;
+    
+
 
     const torusMaterials = new BABYLON.StandardMaterial("torusMaterial", scene);
     torus1.material = torusMaterials;
@@ -135,8 +162,8 @@ const createScene = function () {
     torusMaterials.diffuseTexture = new BABYLON.Texture("images/torus.jpg", scene);
 
     scene.registerBeforeRender(() => {
-        earth.rotation.x += 0.005;
-        moon.rotation.x+=-0.02;
+        earth.rotation.x += 0.011;
+        moon.rotation.x+=-0.05;
     })
 
 
@@ -162,17 +189,22 @@ const createScene = function () {
             return radius;
         };
 
-        var leaves = BABYLON.Mesh.CreateTube("tube", curve, 0, 10, radiusFunction, 1, scene);
-        var trunk = BABYLON.Mesh.CreateCylinder("trunk", nbS / nbL, nbL * 1.5 - nbL / 2 - 1, nbL * 1.5 - nbL / 2 - 1, 12, 1, scene);
+        var leaves = BABYLON.Mesh.CreateTube("tube", curve, 0, 20, radiusFunction, 1, scene);
+        var trunk = BABYLON.Mesh.CreateCylinder("trunk", nbS / nbL, nbL * 1.5 - nbL / 2 - 1, nbL * 1.5 - nbL / 2 - 1, 120, 10, scene);
 
         leaves.material = leafMaterial;
         trunk.material = woodMaterial;
-        var tree = new BABYLON.Mesh.CreateBox('', 1, scene);
+        var tree = new BABYLON.Mesh.CreateBox('', 5, scene);
         tree.isVisible = false;
         leaves.parent = tree;
         trunk.parent = tree;
         return tree;
     }
+
+
+
+
+
 
     var tree = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
     var tree2 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
@@ -203,6 +235,8 @@ const createScene = function () {
     var tree27 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
     var tree28 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
     var tree29 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
+
+    tree.showBoundingBox = true;
 
 
     tree.position.y = 74;
