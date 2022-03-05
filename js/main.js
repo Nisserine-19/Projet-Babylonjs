@@ -428,6 +428,12 @@ const createScene = function () {
     tree28.parent = earth;
     tree29.parent = earth;
 
+
+
+    tree.showBoundingBox = true;
+
+
+    
     return scene;
 
 };
