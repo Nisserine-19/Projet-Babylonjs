@@ -13,18 +13,18 @@ inputStates.right = false;
 
 
 window.addEventListener('keydown', (event) => {
-    if ((event.key === "ArrowLeft") || (event.key === "q")|| (event.key === "Q")) {
-       inputStates.left = true;
-    } else if ((event.key === "ArrowRight") || (event.key === "d")|| (event.key === "D")){
-       inputStates.right = true;
+    if ((event.key === "ArrowLeft") || (event.key === "q") || (event.key === "Q")) {
+        inputStates.left = true;
+    } else if ((event.key === "ArrowRight") || (event.key === "d") || (event.key === "D")) {
+        inputStates.right = true;
     }
 }, false);
 
 window.addEventListener('keyup', (event) => {
-    if ((event.key === "ArrowLeft") || (event.key === "q")|| (event.key === "Q")) {
-       inputStates.left = false;
-    } else if ((event.key === "ArrowRight") || (event.key === "d")|| (event.key === "D")){
-       inputStates.right = false;
+    if ((event.key === "ArrowLeft") || (event.key === "q") || (event.key === "Q")) {
+        inputStates.left = false;
+    } else if ((event.key === "ArrowRight") || (event.key === "d") || (event.key === "D")) {
+        inputStates.right = false;
     }
 }, false);
 
@@ -39,7 +39,7 @@ var createDefaultEngine = function () {
 };
 
 window.initFunction = async function () {
-   engine = new BABYLON.Engine(canvas, true, {
+    engine = new BABYLON.Engine(canvas, true, {
         preserveDrawingBuffer: true,
         stencil: true,
         disableWebGL2Support: false
@@ -60,20 +60,20 @@ window.initFunction = async function () {
     }
 
     engine = await asyncEngineCreation();
-    
+
     engine.runRenderLoop(function () {
         if (sceneToRender && sceneToRender.activeCamera) {
-            if (inputStates.left){
-            ball.translate(translateVectorLeft, 0.3, BABYLON.Space.LOCAL);
+            if (inputStates.left) {
+                ball.translate(translateVectorLeft, 0.3, BABYLON.Space.LOCAL);
             }
 
-            if (inputStates.right){
-            ball.translate(translateVectorRight, 0.3, BABYLON.Space.LOCAL);
+            if (inputStates.right) {
+                ball.translate(translateVectorRight, 0.3, BABYLON.Space.LOCAL);
             }
             sceneToRender.render();
         }
     });
-    
+
     scene = createScene();
     ball = scene.getMeshByName("moon");
 
@@ -93,16 +93,16 @@ window.addEventListener("resize", function () {
 const createScene = function () {
     const scene = new BABYLON.Scene(engine);
 
-    
+
     var music = new BABYLON.Sound("Music", "/music/music.mp3", scene, null, {
         loop: true,
         autoplay: true,
         volume: 0.3
-      });
+    });
 
 
     // Skybox
-    var stars = BABYLON.MeshBuilder.CreateBox("stars", {size: 5000, sideOrientation: BABYLON.Mesh.BACKSIDE}, scene);
+    var stars = BABYLON.MeshBuilder.CreateBox("stars", { size: 5000, sideOrientation: BABYLON.Mesh.BACKSIDE }, scene);
     var starMat = new BABYLON.StandardMaterial("stars", scene);
     var urlStar = "http://jerome.bousquie.fr/BJS/images/stars1.jpg"
     var texStar = new BABYLON.Texture(urlStar, scene);
@@ -112,7 +112,7 @@ const createScene = function () {
     stars.material = starMat;
 
 
-    const camera = new BABYLON.ArcRotateCamera("Camera", 0, 10, 0, new BABYLON.Vector3(0,0, -90), scene);
+    const camera = new BABYLON.ArcRotateCamera("Camera", 0, 10, 0, new BABYLON.Vector3(0, 0, -90), scene);
     camera.detachControl(canvas, true);
     camera.setPosition(new BABYLON.Vector3(0, 110, 50));
 
@@ -129,7 +129,7 @@ const createScene = function () {
     moon.position.y = 80;
     earthMaterials.diffuseTexture = new BABYLON.Texture("images/snow.jpg", scene);
 
-    
+
 
     var spot = new BABYLON.SpotLight("spot", new BABYLON.Vector3(25, 15, -10), new BABYLON.Vector3(-1, -0.8, 1), 15, 1, scene);
     spot.diffuse = new BABYLON.Color3(0.73, 0.73, 0.73);
@@ -153,7 +153,7 @@ const createScene = function () {
     torus1.rotation.z = 1.57;
     torus2.position.x = -26;
     torus2.rotation.z = 1.57;
-    
+
 
 
     const torusMaterials = new BABYLON.StandardMaterial("torusMaterial", scene);
@@ -163,7 +163,7 @@ const createScene = function () {
 
     scene.registerBeforeRender(() => {
         earth.rotation.x += 0.011;
-        moon.rotation.x+=-0.05;
+        moon.rotation.x += -0.05;
     })
 
 
@@ -195,239 +195,208 @@ const createScene = function () {
         leaves.material = leafMaterial;
         trunk.material = woodMaterial;
         var tree = new BABYLON.Mesh.CreateBox('', 5, scene);
-        tree.isVisible = false;
+        // Michel Buffa, remove if necessary
+        tree.showBoundingBox = true;
+        //tree.isVisible = true;
+        //tree.wireframe = true;
         leaves.parent = tree;
         trunk.parent = tree;
         return tree;
     }
 
+    // Michel Buffa un tableau pour les arbres, ça permet d'itérer dessus
+    let trees = [];
 
+    // create 30 trees
+    for (let i = 0; i < 30; i++) {
+        let t = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
+        t.parent = earth;
+        trees.push(t);
+    }
+    // Michel Buffa : pour les collisions
 
+    positionEachTree(trees);
 
+    // On enregistre un action manager pour détecter les collisions entre la balle et les arbres.
 
-
-    var tree = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree2 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree3 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree4 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree5 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree6 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree7 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree8 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree9 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree10 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree11 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree12 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree13 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree14 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree15 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree16 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree17 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree18 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree19 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree20 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree21 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree22 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree23 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree24 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree25 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree26 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree27 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree28 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-    var tree29 = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
-
-    tree.showBoundingBox = true;
-
-
-    tree.position.y = 74;
-    tree.position.x = -10;
-    tree.position.z = -10;
-    tree.rotation.z = 0.1;
-    tree.rotation.x = -0.1;
-
-
-    tree2.position.y = 70;
-    tree2.position.x = 7;
-    tree2.position.z = -30;
-    tree2.rotation.z = -0.1;
-    tree2.rotation.x = -0.4;
-
-    tree3.position.y = 62;
-    tree3.position.x = -10;
-    tree3.position.z = -43;
-    tree3.rotation.z = 0.1;
-    tree3.rotation.x = -0.6;
-
-    tree4.position.y = 58;
-    tree4.position.z = -50;
-    tree4.rotation.x = -0.6;
-
-    tree5.position.y = 43;
-    tree5.position.x = 7;
-    tree5.position.z = -60;
-    tree5.rotation.z = -0.1;
-    tree5.rotation.x = -1;
-
-    tree6.position.y = 38;
-    tree6.position.x = -9;
-    tree6.position.z = -65;
-    tree6.rotation.z = 0.1;
-    tree6.rotation.x = -1;
-
-
-    tree7.position.y = 23;
-    tree7.position.x = 1;
-    tree7.position.z = -73;
-    tree7.rotation.x = -1.3;
-
-    tree8.position.y = 13;
-    tree8.position.x = -9;
-    tree8.position.z = -75;
-    tree8.rotation.x = -1.3;
-
-    tree9.position.y = 3;
-    tree9.position.x = 5;
-    tree9.position.z = -75;
-    tree9.rotation.x = -1.3;
-
-    tree10.position.y = -12;
-    tree10.position.x = -9;
-    tree10.position.z = -75;
-    tree10.rotation.z = 0.1;
-    tree10.rotation.x = -1.7;
-
-    tree11.position.y = -27;
-    tree11.position.x = 2;
-    tree11.position.z = -70;
-    tree11.rotation.x = -1.7;
-
-    tree12.position.y = -38;
-    tree12.position.x = 2;
-    tree12.position.z = -65;
-    tree12.rotation.x = -2;
-
-    tree13.position.y = -52;
-    tree13.position.x = 2;
-    tree13.position.z = -57;
-    tree13.rotation.x = -2.1;
-
-    tree14.position.y = -62;
-    tree14.position.x = -9;
-    tree14.position.z = -40;
-    tree14.rotation.x = -2.5;
-
-    tree15.position.y = 74;
-    tree15.position.x = -10;
-    tree15.position.z = 10;
-    tree15.rotation.z = 0.1;
-    tree15.rotation.x = 0.1;
-
-
-    tree16.position.y = 70;
-    tree16.position.x = 7;
-    tree16.position.z = 30;
-    tree16.rotation.z = -0.1;
-    tree16.rotation.x = 0.4;
-
-    tree17.position.y = 63;
-    tree17.position.x = -10;
-    tree17.position.z = 43;
-    tree17.rotation.z = 0.1;
-    tree17.rotation.x = 0.6;
-
-    tree18.position.y = 58;
-    tree18.position.z = 50;
-    tree18.rotation.x = 0.6;
-
-    tree19.position.y = 43;
-    tree19.position.x = 7;
-    tree19.position.z = 60;
-    tree19.rotation.z = -0.1;
-    tree19.rotation.x = 1;
-
-    tree20.position.y = 38;
-    tree20.position.x = -9;
-    tree20.position.z = 65;
-    tree20.rotation.z = 0.1;
-    tree20.rotation.x = 1;
-
-
-    tree21.position.y = 23;
-    tree21.position.x = 1;
-    tree21.position.z = 73;
-    tree21.rotation.x = 1.3;
-
-    tree22.position.y = 13;
-    tree22.position.x = -9;
-    tree22.position.z = 75;
-    tree22.rotation.x = 1.3;
-
-    tree23.position.y = 3;
-    tree23.position.x = 5;
-    tree23.position.z = 75;
-    tree23.rotation.x = 1.3;
-
-    tree24.position.y = -12;
-    tree24.position.x = -9;
-    tree24.position.z = 75;
-    tree24.rotation.z = 0.1;
-    tree24.rotation.x = 1.7;
-
-    tree25.position.y = -27;
-    tree25.position.x = 2;
-    tree25.position.z = 70;
-    tree25.rotation.x = 1.7;
-
-    tree26.position.y = -38;
-    tree26.position.x = 2;
-    tree26.position.z = 65;
-    tree26.rotation.x = 2;
-
-    tree27.position.y = -52;
-    tree27.position.x = 2;
-    tree27.position.z = 57;
-    tree27.rotation.x = 2.1;
-
-    tree28.position.y = -62;
-    tree28.position.x = 9;
-    tree28.position.z = 40;
-    tree28.rotation.x = 2.5;
-
-    tree29.position.y = -69;
-    tree29.position.x = 9;
-    tree29.position.z = 32;
-    tree29.rotation.x = 2.8;
-
-    tree.parent = earth;
-    tree2.parent = earth;
-    tree3.parent = earth;
-    tree4.parent = earth;
-    tree5.parent = earth;
-    tree6.parent = earth;
-    tree7.parent = earth;
-    tree8.parent = earth;
-    tree9.parent = earth;
-    tree10.parent = earth;
-    tree11.parent = earth;
-    tree12.parent = earth;
-    tree13.parent = earth;
-    tree14.parent = earth;
-    tree15.parent = earth;
-    tree16.parent = earth;
-    tree17.parent = earth;
-    tree18.parent = earth;
-    tree19.parent = earth;
-    tree20.parent = earth;
-    tree21.parent = earth;
-    tree22.parent = earth;
-    tree23.parent = earth;
-    tree24.parent = earth;
-    tree25.parent = earth;
-    tree26.parent = earth;
-    tree27.parent = earth;
-    tree28.parent = earth;
-    tree29.parent = earth;
+    moon.actionManager = new BABYLON.ActionManager(scene);
+    
+    // register an action for when the ball intesects a tree, so we need to iterate on each tree
+    trees.forEach(tree => {
+        moon.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+            {
+                trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger,
+                parameter: tree
+            },
+            () => {
+                // il y a une collision, on supprime l'arbre
+                // déclencher ici particules sur le tree
+                tree.dispose();
+            }
+        ));
+    });
 
     return scene;
 
 };
+
+function positionEachTree(trees) {
+    trees[0].position.y = 74;
+    trees[0].position.x = -10;
+    trees[0].position.z = -10;
+    trees[0].rotation.z = 0.1;
+    trees[0].rotation.x = -0.1;
+
+
+    trees[1].position.y = 70;
+    trees[1].position.x = 7;
+    trees[1].position.z = -30;
+    trees[1].rotation.z = -0.1;
+    trees[1].rotation.x = -0.4;
+
+    trees[2].position.y = 62;
+    trees[2].position.x = -10;
+    trees[2].position.z = -43;
+    trees[2].rotation.z = 0.1;
+    trees[2].rotation.x = -0.6;
+
+    trees[3].position.y = 58;
+    trees[3].position.z = -50;
+    trees[3].rotation.x = -0.6;
+
+    trees[4].position.y = 43;
+    trees[4].position.x = 7;
+    trees[4].position.z = -60;
+    trees[4].rotation.z = -0.1;
+    trees[4].rotation.x = -1;
+
+    trees[5].position.y = 38;
+    trees[5].position.x = -9;
+    trees[5].position.z = -65;
+    trees[5].rotation.z = 0.1;
+    trees[5].rotation.x = -1;
+
+
+    trees[6].position.y = 23;
+    trees[6].position.x = 1;
+    trees[6].position.z = -73;
+    trees[6].rotation.x = -1.3;
+
+    trees[7].position.y = 13;
+    trees[7].position.x = -9;
+    trees[7].position.z = -75;
+    trees[7].rotation.x = -1.3;
+
+    trees[8].position.y = 3;
+    trees[8].position.x = 5;
+    trees[8].position.z = -75;
+    trees[8].rotation.x = -1.3;
+
+    trees[9].position.y = -12;
+    trees[9].position.x = -9;
+    trees[9].position.z = -75;
+    trees[9].rotation.z = 0.1;
+    trees[9].rotation.x = -1.7;
+
+    trees[10].position.y = -27;
+    trees[10].position.x = 2;
+    trees[10].position.z = -70;
+    trees[10].rotation.x = -1.7;
+
+    trees[11].position.y = -38;
+    trees[11].position.x = 2;
+    trees[11].position.z = -65;
+    trees[11].rotation.x = -2;
+
+    trees[12].position.y = -52;
+    trees[12].position.x = 2;
+    trees[12].position.z = -57;
+    trees[12].rotation.x = -2.1;
+
+    trees[13].position.y = -62;
+    trees[13].position.x = -9;
+    trees[13].position.z = -40;
+    trees[13].rotation.x = -2.5;
+
+    trees[14].position.y = 74;
+    trees[14].position.x = -10;
+    trees[14].position.z = 10;
+    trees[14].rotation.z = 0.1;
+    trees[14].rotation.x = 0.1;
+
+
+    trees[15].position.y = 70;
+    trees[15].position.x = 7;
+    trees[15].position.z = 30;
+    trees[15].rotation.z = -0.1;
+    trees[15].rotation.x = 0.4;
+
+    trees[16].position.y = 63;
+    trees[16].position.x = -10;
+    trees[16].position.z = 43;
+    trees[16].rotation.z = 0.1;
+    trees[16].rotation.x = 0.6;
+
+    trees[17].position.y = 58;
+    trees[17].position.z = 50;
+    trees[17].rotation.x = 0.6;
+
+    trees[18].position.y = 43;
+    trees[18].position.x = 7;
+    trees[18].position.z = 60;
+    trees[18].rotation.z = -0.1;
+    trees[18].rotation.x = 1;
+
+    trees[19].position.y = 38;
+    trees[19].position.x = -9;
+    trees[19].position.z = 65;
+    trees[19].rotation.z = 0.1;
+    trees[19].rotation.x = 1;
+
+
+    trees[20].position.y = 23;
+    trees[20].position.x = 1;
+    trees[20].position.z = 73;
+    trees[20].rotation.x = 1.3;
+
+    trees[21].position.y = 13;
+    trees[21].position.x = -9;
+    trees[21].position.z = 75;
+    trees[21].rotation.x = 1.3;
+
+    trees[22].position.y = 3;
+    trees[22].position.x = 5;
+    trees[22].position.z = 75;
+    trees[22].rotation.x = 1.3;
+
+    trees[23].position.y = -12;
+    trees[23].position.x = -9;
+    trees[23].position.z = 75;
+    trees[23].rotation.z = 0.1;
+    trees[23].rotation.x = 1.7;
+
+    trees[24].position.y = -27;
+    trees[24].position.x = 2;
+    trees[24].position.z = 70;
+    trees[24].rotation.x = 1.7;
+
+    trees[25].position.y = -38;
+    trees[25].position.x = 2;
+    trees[25].position.z = 65;
+    trees[25].rotation.x = 2;
+
+    trees[26].position.y = -52;
+    trees[26].position.x = 2;
+    trees[26].position.z = 57;
+    trees[26].rotation.x = 2.1;
+
+    trees[27].position.y = -62;
+    trees[27].position.x = 9;
+    trees[27].position.z = 40;
+    trees[27].rotation.x = 2.5;
+
+    trees[28].position.y = -69;
+    trees[28].position.x = 9;
+    trees[28].position.z = 32;
+    trees[28].rotation.x = 2.8;
+}
