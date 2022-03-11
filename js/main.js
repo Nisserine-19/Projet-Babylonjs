@@ -167,7 +167,7 @@ const createScene = function () {
     })
 
 
-    var simplePineGenerator = function (canopies, height, trunkMaterial, leafMaterial, particleSystem) {
+    var simplePineGenerator = function (canopies, height, trunkMaterial, leafMaterial) {
         var curvePoints = function (l, t) {
             var path = [];
             var step = l / t;
