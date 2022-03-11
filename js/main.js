@@ -167,7 +167,7 @@ const createScene = function () {
     })
 
 
-    var simplePineGenerator = function (canopies, height, trunkMaterial, leafMaterial) {
+    var simplePineGenerator = function (canopies, height, trunkMaterial, leafMaterial, particleSystem) {
         var curvePoints = function (l, t) {
             var path = [];
             var step = l / t;
@@ -189,35 +189,51 @@ const createScene = function () {
             return radius;
         };
 
+        var particleSystem = new BABYLON.ParticleSystem("particles", 2000);
+        particleSystem.particleTexture = new BABYLON.Texture("textures/flare.png");
         var leaves = BABYLON.Mesh.CreateTube("tube", curve, 0, 20, radiusFunction, 1, scene);
         var trunk = BABYLON.Mesh.CreateCylinder("trunk", nbS / nbL, nbL * 1.5 - nbL / 2 - 1, nbL * 1.5 - nbL / 2 - 1, 120, 10, scene);
 
         leaves.material = leafMaterial;
         trunk.material = woodMaterial;
         var tree = new BABYLON.Mesh.CreateBox('', 5, scene);
-        // Michel Buffa, remove if necessary
-        tree.showBoundingBox = true;
-        //tree.isVisible = true;
-        //tree.wireframe = true;
+
         leaves.parent = tree;
         trunk.parent = tree;
+ 
         return tree;
     }
 
-    // Michel Buffa un tableau pour les arbres, ça permet d'itérer dessus
     let trees = [];
+        // Create a particle system
+        var particleSystem = new BABYLON.ParticleSystem("particles", 4000, scene);
+        particleSystem.particleTexture = new BABYLON.Texture("textures/flare.png", scene);
+        particleSystem.minSize = 0.1;
+        particleSystem.maxSize = 1.0;
+        particleSystem.minLifeTime = 0.5;
+        particleSystem.maxLifeTime = 5.0;
+        particleSystem.minEmitPower = 0.5;
+        particleSystem.maxEmitPower = 3.0;
+        particleSystem.emitter = trees;
+        particleSystem.emitRate = 100;
+        particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+        particleSystem.direction1 = new BABYLON.Vector3(-1, 1, -1);
+        particleSystem.direction2 = new BABYLON.Vector3(1, 1, 1);
+        particleSystem.color1 = new BABYLON.Color4(1, 1, 0, 1);
+        particleSystem.color2 = new BABYLON.Color4(1, 0.5, 0, 1);
+        particleSystem.gravity = new BABYLON.Vector3(0, -1.0, 0);
 
     // create 30 trees
     for (let i = 0; i < 30; i++) {
         let t = simplePineGenerator(3, 15, woodMaterial, leafMaterial);
         t.parent = earth;
         trees.push(t);
+
     }
-    // Michel Buffa : pour les collisions
 
     positionEachTree(trees);
 
-    // On enregistre un action manager pour détecter les collisions entre la balle et les arbres.
+
 
     moon.actionManager = new BABYLON.ActionManager(scene);
     
@@ -229,9 +245,12 @@ const createScene = function () {
                 parameter: tree
             },
             () => {
-                // il y a une collision, on supprime l'arbre
+             // il y a une collision, on supprime l'arbre
                 // déclencher ici particules sur le tree
+
                 tree.dispose();
+                particleSystem.start();
+
             }
         ));
     });
