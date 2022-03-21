@@ -289,7 +289,7 @@ const createScene = function () {
                 setTimeout(() => {
                     particleSystem.stop();
                     particleSystem.canStart = true;
-                }, 20);
+                }, 200);
                 //particleSystem.start();
                 tree.dispose();
 
