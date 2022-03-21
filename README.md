@@ -11,6 +11,8 @@ Trees : https://playground.babylonjs.com/#LG3GS#106
 
 Rotation : https://www.babylonjs-playground.com/#SFA6BT#7
 
+Particules : https://www.youtube.com/watch?v=BPJ0SZQnOXk
+
 
 # Ce qu'on a réussi : Nous avons réussi a créé un jeu avec un gameplay correct, avec toutes les parties vu en cours.
 Deplus, nous avons totalement utilisé un autre gameplay que celui vu en cours, avec un plan qui est sphérique etc...

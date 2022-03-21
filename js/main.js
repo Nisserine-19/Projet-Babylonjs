@@ -211,7 +211,7 @@ const createScene = function () {
 
         
         particleSystem.minSize = 0.1;
-        particleSystem.maxSize = 1.0;
+        particleSystem.maxSize = 1.5;
         particleSystem.minLifeTime = 0.1;
         particleSystem.maxLifeTime = 0.4;
         particleSystem.minEmitPower = 0.5;
@@ -219,12 +219,12 @@ const createScene = function () {
         //particleSystem.emitter = trees;
         particleSystem.emitRate = 1000;
         particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
-        particleSystem.direction1 = new BABYLON.Vector3(0, 5, 0);
-        particleSystem.direction2 = new BABYLON.Vector3(1, 1, 0);
+        particleSystem.direction1 = new BABYLON.Vector3(-5, 10, 5);
+        particleSystem.direction2 = new BABYLON.Vector3(5, 10, 5);
         particleSystem.color1 = new BABYLON.Color4(1, 1, 0, 1);
         particleSystem.color2 = new BABYLON.Color4(1, 0.5, 0, 1);
-    particleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
-    particleSystem.canStart = false;
+        particleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
+        particleSystem.canStart = false;
 
        /*
         // Colors of all particles RGBA
@@ -289,7 +289,7 @@ const createScene = function () {
                 setTimeout(() => {
                     particleSystem.stop();
                     particleSystem.canStart = true;
-                }, 300);
+                }, 20);
                 //particleSystem.start();
                 tree.dispose();
 
