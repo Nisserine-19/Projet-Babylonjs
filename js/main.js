@@ -208,20 +208,46 @@ const createScene = function () {
         // Create a particle system
         var particleSystem = new BABYLON.ParticleSystem("particles", 4000, scene);
         particleSystem.particleTexture = new BABYLON.Texture("textures/flare.png", scene);
+
+        
         particleSystem.minSize = 0.1;
         particleSystem.maxSize = 1.0;
-        particleSystem.minLifeTime = 0.5;
-        particleSystem.maxLifeTime = 5.0;
+        particleSystem.minLifeTime = 0.1;
+        particleSystem.maxLifeTime = 0.4;
         particleSystem.minEmitPower = 0.5;
-        particleSystem.maxEmitPower = 3.0;
-        particleSystem.emitter = trees;
-        particleSystem.emitRate = 100;
+        particleSystem.maxEmitPower = 10.0;
+        //particleSystem.emitter = trees;
+        particleSystem.emitRate = 1000;
         particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
-        particleSystem.direction1 = new BABYLON.Vector3(-1, 1, -1);
-        particleSystem.direction2 = new BABYLON.Vector3(1, 1, 1);
+        particleSystem.direction1 = new BABYLON.Vector3(0, 5, 0);
+        particleSystem.direction2 = new BABYLON.Vector3(1, 1, 0);
         particleSystem.color1 = new BABYLON.Color4(1, 1, 0, 1);
         particleSystem.color2 = new BABYLON.Color4(1, 0.5, 0, 1);
-        particleSystem.gravity = new BABYLON.Vector3(0, -1.0, 0);
+    particleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
+    particleSystem.canStart = false;
+
+       /*
+        // Colors of all particles RGBA
+    particleSystem.color1 = new BABYLON.Color4(1, 0, 0, 1.0);
+    particleSystem.color2 = new BABYLON.Color4(1, 0, 0, 1.0);
+    particleSystem.colorDead = new BABYLON.Color4(0, 0, 0, 0.0);
+
+    particleSystem.emitRate = 100;
+
+    // Set the gravity of all particles
+    particleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
+
+    // Direction of each particle after it has been emitted
+    particleSystem.direction1 = new BABYLON.Vector3(0, -1, 0);
+    particleSystem.direction2 = new BABYLON.Vector3(0, -1, 0);
+
+    particleSystem.minEmitPower = 6;
+    particleSystem.maxEmitPower = 10;
+
+     // Size of each particle (random between...
+     particleSystem.minSize = 0.4;
+     particleSystem.maxSize = 0.8;
+*/
 
     // create 30 trees
     for (let i = 0; i < 30; i++) {
@@ -248,8 +274,24 @@ const createScene = function () {
              // il y a une collision, on supprime l'arbre
                 // déclencher ici particules sur le tree
 
+                 // locate particle system at hit point in GLOBAL COORDINATE SYSTEM
+                 //const matrix = moon.computeWorldMatrix(true);
+                //const global_position = BABYLON.Vector3.TransformCoordinates(moon.position, matrix);
+                //particleSystem.emitter = global_position;
+                particleSystem.emitter = moon.position;
+                // start particle system
+                if(particleSystem.canStart) {
+                    particleSystem.start();
+                    particleSystem.canStart = false;
+                }
+
+                // make it stop after 300ms
+                setTimeout(() => {
+                    particleSystem.stop();
+                    particleSystem.canStart = true;
+                }, 300);
+                //particleSystem.start();
                 tree.dispose();
-                particleSystem.start();
 
             }
         ));
